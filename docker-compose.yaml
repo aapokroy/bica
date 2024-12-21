@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:15.3
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES__USER}
+      POSTGRES_PASSWORD: ${POSTGRES__PASSWORD}
+      POSTGRES_DB: db
+      TZ: "Europa/Moscow"
+      POSTGRES_INITDB_ARGS: "--locale=en_US.UTF-8 --encoding=UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init/:/docker-entrypoint-initdb.d/
+  streamlit:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./:/app
+
+volumes:
+  postgres_data:
